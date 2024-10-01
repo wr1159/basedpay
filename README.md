@@ -18,19 +18,24 @@ Scan Payment QR Codes -> Fetch ERC721 by ID -> Get owner's address for payment
 ### TODOs
 
 General:
-[ ] Paymaster integration for gasless transactions
-[ ] Referral system ↓↓
+
+-   [ ] Paymaster integration for gasless transactions
+-   [ ] Referral system ↓↓
 
 Users:
-[ ] Users can scan a Singapore Payment QRCode and make a payment using a specific ERC20 (xSGD)
-[ ] Support multiple ERC20 for payment (Uniswap Router swap to xSGD) ↓
+
+-   [ ] Users can scan a Singapore Payment QRCode and make a payment using a specific ERC20 (xSGD)
+-   [ ] Support multiple ERC20 for payment (Uniswap Router swap to xSGD) ↓
 
 Merchant:
-[ ] Merchants can claim a Payment QRCode and receive an ERC721
-[ ] Merchants can receive a notification whenever they receive payment to their Onchain Address
-[ ] Merchants can have a dashboard to view their earnings ↓
-[ ] Merchants can verify their UEN ownership by uploading their registration letter ↓
-[ ] Merchants can verify their phone number ownership via SMS 2FA ↓
+
+-   [ ] Merchants can claim a Payment QRCode and receive an ERC721
+-   [ ] Merchants can receive a notification whenever they receive payment to their Onchain Address
+-   [ ] Merchants can have a dashboard to view their earnings ↓
+-   [ ] Merchants can verify their UEN ownership by uploading their registration letter ↓
+-   [ ] Merchants can verify their phone number ownership via SMS 2FA ↓
+
+\*↓ represents lower priority
 
 ## Resources
 
