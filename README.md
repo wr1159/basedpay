@@ -1,6 +1,6 @@
-# Basepay
+# Basedpay
 
-Basepay is a payment solution on Base for both merchants and users to pay in cryptocurrency using Singapore Payment QR Codes.
+Basedpay is a payment solution on Base for both merchants and users to pay in cryptocurrency using Singapore Payment QR Codes.
 
 ## Repo
 
@@ -39,6 +39,6 @@ Merchant:
 
 ## Resources
 
-[onchainkit.xyz/](https://onchainkit.xyz/)
-[smartwallet.dev/guides/paymasters](https://www.smartwallet.dev/guides/paymasters)
-[poonchuanan/Python-PayNow-QR-Code-Generator](https://github.com/poonchuanan/Python-PayNow-QR-Code-Generator)
+-   [onchainkit.xyz/](https://onchainkit.xyz/)
+-   [smartwallet.dev/guides/paymasters](https://www.smartwallet.dev/guides/paymasters)
+-   [poonchuanan/Python-PayNow-QR-Code-Generator](https://github.com/poonchuanan/Python-PayNow-QR-Code-Generator)
