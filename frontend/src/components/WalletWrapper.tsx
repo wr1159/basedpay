@@ -28,7 +28,7 @@ export default function WalletWrapper({
 }: WalletWrapperParams) {
   return (
     <>
-      <Wallet>
+      <Wallet className='!bg-opacity-20'>
         <ConnectWallet
           withWalletAggregator={withWalletAggregator}
           text={text}
