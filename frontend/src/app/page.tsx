@@ -1,52 +1,28 @@
-'use client';
-import Footer from 'src/components/Footer';
-import TransactionWrapper from 'src/components/TransactionWrapper';
-import WalletWrapper from 'src/components/WalletWrapper';
-import { ONCHAINKIT_LINK } from 'src/links';
-import OnchainkitSvg from 'src/svg/OnchainkitSvg';
-import { useAccount } from 'wagmi';
-import LoginButton from '../components/LoginButton';
-import SignupButton from '../components/SignupButton';
+"use client";
 
 export default function Page() {
-  const { address } = useAccount();
-
-  return (
-    <div className="flex h-full w-96 max-w-full flex-col px-1 md:w-[1008px]">
-      <section className="mt-6 mb-6 flex w-full flex-col md:flex-row">
-        <div className="flex w-full flex-row items-center justify-between gap-2 md:gap-0">
-          <a
-            href={ONCHAINKIT_LINK}
-            title="onchainkit"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <OnchainkitSvg />
-          </a>
-          <div className="flex items-center gap-3">
-            <SignupButton />
-            {!address && <LoginButton />}
-          </div>
-        </div>
-      </section>
-      <section className="templateSection flex w-full flex-col items-center justify-center gap-4 rounded-xl bg-gray-100 px-2 py-4 md:grow">
-        <div className="flex h-[450px] w-[450px] max-w-full items-center justify-center rounded-xl bg-[#030712]">
-          <div className="rounded-xl bg-[#F3F4F6] px-4 py-[11px]">
-            <p className="font-normal text-indigo-600 text-xl not-italic tracking-[-1.2px]">
-              npm install @coinbase/onchainkit
-            </p>
-          </div>
-        </div>
-        {address ? (
-          <TransactionWrapper address={address} />
-        ) : (
-          <WalletWrapper
-            className="w-[450px] max-w-full"
-            text="Sign in to transact"
-          />
-        )}
-      </section>
-      <Footer />
-    </div>
-  );
+    return (
+        <section className="templateSection flex w-full flex-col items-center justify-center gap-4 rounded-xl bg-gray-100 px-2 py-4 md:grow">
+            <div className="rounded-xl bg-[#F3F4F6] px-4 py-[11px]">
+                <p className="font-normal text-indigo-600 text-3xl not-italic tracking-[-1.2px]">
+                    Welcome to BasedPay!
+                </p>
+                <p className="font-normal text-gray-800 not-italic tracking-[-0.6px] text-xl">
+                    BasedPay is a simple and secure way to send cryptocurrency
+                    to anyone
+                </p>
+                <p className="font-normal text-gray-800 not-italic tracking-[-0.6px] mt-10 text-lg">
+                    I am a...
+                </p>
+                <div className="flex gap-4 w-full justify-center">
+                    <button className="bg-indigo-600 text-white rounded-lg px-4 py-2 mt-2 grow">
+                        <a href="/customer">Customer</a>
+                    </button>
+                    <button className="bg-indigo-600 text-white rounded-lg px-4 py-2 mt-2 grow">
+                        <a href="/merchant">Merchant</a>
+                    </button>
+                </div>
+            </div>
+        </section>
+    );
 }
