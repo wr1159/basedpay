@@ -2,6 +2,8 @@
 
 import { TokenRow } from "@coinbase/onchainkit/token";
 import Stores from "./stores";
+import { useEffect } from "react";
+import { useToastContext } from "src/context/ToastContext";
 
 const token = {
     address: `0x1234` as const,
@@ -13,6 +15,17 @@ const token = {
 };
 
 export default function MerchantPage() {
+    const { showToast } = useToastContext();
+
+    useEffect(() => {
+        setInterval(() => {
+            showToast(
+                "You have received a payment",
+                "https://etherscan.io/tx/0x1234"
+            );
+        }, 10000);
+    }, []);
+
     return (
         <>
             <div className="font-normal text-indigo-600 text-3xl not-italic tracking-[-1.2px] mb-8">

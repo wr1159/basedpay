@@ -8,7 +8,7 @@ export default function Header() {
     const { address } = useAccount();
 
     return (
-        <section className="mt-6 mb-6 flex flex-col md:flex-row w-[90vw]">
+        <section className="mt-6 mb-6 flex flex-col md:flex-row w-[90vw] max-w-xl">
             <div className="flex w-full flex-row items-center justify-between gap-2 md:gap-0">
                 <a href="/" rel="noreferrer">
                     <OnchainkitSvg />

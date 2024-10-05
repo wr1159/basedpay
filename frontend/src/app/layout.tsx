@@ -6,6 +6,7 @@ import "@coinbase/onchainkit/styles.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import dynamic from "next/dynamic";
 import Header from "src/components/Header";
+import { ToastProvider } from "src/context/ToastContext";
 
 const OnchainProviders = dynamic(
     () => import("src/components/OnchainProviders"),
@@ -36,10 +37,12 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <body className="px-4">
+            <body className="px-4 flex justify-center">
                 <OnchainProviders>
-                    <Header />
-                    {children}
+                    <ToastProvider>
+                        <Header />
+                        {children}
+                    </ToastProvider>
                 </OnchainProviders>
             </body>
         </html>
