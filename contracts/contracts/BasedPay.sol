@@ -7,8 +7,8 @@ contract BasedPay is Ownable {
     mapping (string => address) public uenToAddressMap;
     constructor() Ownable(msg.sender) {}
 
-    function addMapping(string memory uen, address addr) public {
-        uenToAddressMap[uen] = addr;
+    function register(string memory uen) public {
+        uenToAddressMap[uen] = msg.sender;
     }
 
     function deleteMapping(string memory uen) public onlyOwner {
@@ -19,7 +19,7 @@ contract BasedPay is Ownable {
         uenToAddressMap[uen] = addr;
     }
 
-    function getMapping(string memory uen) public view returns (address) {
+    function getAddressFromUen(string memory uen) public view returns (address) {
         return uenToAddressMap[uen];
     }
 }
