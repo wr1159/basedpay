@@ -88,4 +88,43 @@ describe("BasedPay", () => {
             );
         });
     });
+    describe("Update Mapping", function () {
+        it("Should allow only the owner to update a mapping", async function () {
+            const { basedPay, deployer, otherAccount } = await loadFixture(
+                setupFixture
+            );
+            const uen = "123456789X";
+            const initialAddr = otherAccount.address;
+            const updatedAddr = deployer.address; // Assume we want to update to owner's address
+
+            // Add a new mapping
+            await basedPay.addMapping(uen, initialAddr);
+
+            // Update the mapping as the owner
+            await basedPay.updateMapping(uen, updatedAddr);
+
+            // Check the updated address for the given UEN
+            expect(await basedPay.getMapping(uen)).to.equal(updatedAddr);
+        });
+
+        it("Should revert if a non-owner tries to update a mapping", async function () {
+            const { basedPay, deployer, otherAccount } = await loadFixture(
+                setupFixture
+            );
+            const uen = "123456789X";
+            const initialAddr = otherAccount.address;
+            const updatedAddr = deployer.address;
+
+            // Add a new mapping
+            await basedPay.addMapping(uen, initialAddr);
+
+            // Try to update the mapping as a non-owner (this should fail)
+            await expect(
+                basedPay.connect(otherAccount).updateMapping(uen, updatedAddr)
+            ).to.be.revertedWithCustomError(
+                basedPay,
+                "OwnableUnauthorizedAccount"
+            );
+        });
+    });
 });

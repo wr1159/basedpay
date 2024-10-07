@@ -15,6 +15,10 @@ contract BasedPay is Ownable {
         delete uenToAddressMap[uen];
     }
 
+    function updateMapping(string memory uen, address addr) public onlyOwner {
+        uenToAddressMap[uen] = addr;
+    }
+
     function getMapping(string memory uen) public view returns (address) {
         return uenToAddressMap[uen];
     }
