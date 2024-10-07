@@ -1,8 +1,4 @@
 "use client";
-import { useState } from "react";
-import PhoneVerification from "src/components/merchant/PhoneVerification";
-
-export default function AddStorePage() {
 
 import {
     Transaction,
@@ -20,6 +16,7 @@ import {
 import { useState } from "react";
 import { parseEther } from "viem";
 import { useToastContext } from "src/context/ToastContext";
+import PhoneVerification from "src/components/merchant/PhoneVerification";
 
 export default function AddStorePage() {
     const [storeName, setStoreName] = useState("store-name");
@@ -59,12 +56,7 @@ export default function AddStorePage() {
                 />
             </div>
             <PhoneVerification setPhoneVerified={setPhoneVerified} />
-            <button
-                className="bg-indigo-600 text-white rounded-xl p-4 w-full mt-8"
-                disabled={!storeName || !phoneVerified}
-            >
-                Add Store
-            </button>
+
             <Transaction
                 chainId={BASE_SEPOLIA_CHAIN_ID}
                 calls={basenameRegisterCalls}
@@ -77,8 +69,9 @@ export default function AddStorePage() {
                 }
             >
                 <TransactionButton
-                    className="mt-0 mr-auto ml-auto max-w-full rounded-3xl p-4 "
-                    text="Mint basename"
+                    className="mt-0 mr-auto ml-auto max-w-full rounded-xl p-4 "
+                    text="Add Store"
+                    disabled={!storeName || !phoneVerified}
                 />
                 <TransactionStatus>
                     <TransactionStatusLabel />
