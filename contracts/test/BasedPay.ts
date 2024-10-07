@@ -24,17 +24,17 @@ describe("BasedPay", () => {
         });
     });
 
-    describe("Add Mapping", function () {
-        it("Should allow anyone to add a mapping", async function () {
-            const { basedPay, otherAccount } = await loadFixture(setupFixture);
+    describe("Register", function () {
+        it("Should allow anyone to register and add a mapping", async function () {
+            const { basedPay, deployer } = await loadFixture(setupFixture);
             const uen = "123456789X";
-            const addr = otherAccount.address;
+            const addr = deployer.address;
 
             // Add a new mapping
-            await basedPay.addMapping(uen, addr);
+            await basedPay.register(uen);
 
             // Check the stored address for the given UEN
-            expect(await basedPay.getMapping(uen)).to.equal(addr);
+            expect(await basedPay.getAddressFromUen(uen)).to.equal(addr);
         });
     });
 
@@ -45,7 +45,7 @@ describe("BasedPay", () => {
             const addr = otherAccount.address;
 
             // Add a new mapping
-            await basedPay.addMapping(uen, addr);
+            await basedPay.register(uen);
 
             // Try to delete the mapping as a non-owner (this should fail)
             await expect(
@@ -59,7 +59,7 @@ describe("BasedPay", () => {
             await basedPay.deleteMapping(uen);
 
             // Check if the mapping was deleted (should return address(0))
-            expect(await basedPay.getMapping(uen)).to.equal(
+            expect(await basedPay.getAddressFromUen(uen)).to.equal(
                 hre.ethers.ZeroAddress
             );
         });
@@ -72,10 +72,10 @@ describe("BasedPay", () => {
             const addr = otherAccount.address;
 
             // Add a new mapping
-            await basedPay.addMapping(uen, addr);
+            await basedPay.connect(otherAccount).register(uen);
 
             // Retrieve and check the address for the given UEN
-            expect(await basedPay.getMapping(uen)).to.equal(addr);
+            expect(await basedPay.getAddressFromUen(uen)).to.equal(addr);
         });
 
         it("Should return address(0) for a non-existent UEN", async function () {
@@ -83,7 +83,7 @@ describe("BasedPay", () => {
             const uen = "nonexistentUEN";
 
             // Check that an unregistered UEN returns the zero address
-            expect(await basedPay.getMapping(uen)).to.equal(
+            expect(await basedPay.getAddressFromUen(uen)).to.equal(
                 hre.ethers.ZeroAddress
             );
         });
@@ -98,13 +98,15 @@ describe("BasedPay", () => {
             const updatedAddr = deployer.address; // Assume we want to update to owner's address
 
             // Add a new mapping
-            await basedPay.addMapping(uen, initialAddr);
+            await basedPay.connect(otherAccount).register(uen);
+
+            expect(await basedPay.getAddressFromUen(uen)).to.equal(initialAddr);
 
             // Update the mapping as the owner
             await basedPay.updateMapping(uen, updatedAddr);
 
             // Check the updated address for the given UEN
-            expect(await basedPay.getMapping(uen)).to.equal(updatedAddr);
+            expect(await basedPay.getAddressFromUen(uen)).to.equal(updatedAddr);
         });
 
         it("Should revert if a non-owner tries to update a mapping", async function () {
@@ -112,11 +114,10 @@ describe("BasedPay", () => {
                 setupFixture
             );
             const uen = "123456789X";
-            const initialAddr = otherAccount.address;
             const updatedAddr = deployer.address;
 
             // Add a new mapping
-            await basedPay.addMapping(uen, initialAddr);
+            await basedPay.register(uen);
 
             // Try to update the mapping as a non-owner (this should fail)
             await expect(
