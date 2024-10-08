@@ -1,4 +1,5 @@
 import { HardhatUserConfig } from "hardhat/config";
+import "hardhat-deploy";
 import "@nomicfoundation/hardhat-toolbox";
 
 require("dotenv").config();
@@ -8,6 +9,11 @@ const config: HardhatUserConfig = {
         version: "0.8.23",
     },
     networks: {
+        hardhat: {
+            forking: {
+                url: "https://sepolia.base.org",
+            },
+        },
         // for mainnet
         "base-mainnet": {
             url: "https://mainnet.base.org",
@@ -25,6 +31,18 @@ const config: HardhatUserConfig = {
             url: "http://localhost:8545",
             accounts: [process.env.WALLET_KEY as string],
             gasPrice: 1000000000,
+        },
+    },
+    namedAccounts: {
+        deployer: {
+            default: 0, // Default is the first account
+            mainnet: 0,
+        },
+        owner: {
+            default: 0,
+        },
+        user: {
+            default: 1,
         },
     },
     defaultNetwork: "hardhat",
