@@ -87,6 +87,25 @@ export const BasedPayAbi = [
         stateMutability: "nonpayable",
         type: "function",
     },
+    {
+        inputs: [
+            {
+                internalType: "string",
+                name: "uen",
+                type: "string",
+            },
+        ],
+        name: "getAddressFromUen",
+        outputs: [
+            {
+                internalType: "address",
+                name: "",
+                type: "address",
+            },
+        ],
+        stateMutability: "view",
+        type: "function",
+    },
 ];
 
 // Basenames Registrar Controller Contract Address.

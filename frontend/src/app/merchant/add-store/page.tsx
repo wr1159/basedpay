@@ -20,6 +20,7 @@ import { encodeFunctionData, parseEther } from "viem";
 import { useToastContext } from "src/context/ToastContext";
 import PhoneVerification from "src/components/merchant/PhoneVerification";
 import { useSearchParams } from "next/navigation";
+import { TOAST_TYPE } from "src/models/toast";
 
 export default function AddStorePage() {
     const [storeName, setStoreName] = useState("store-name");
@@ -81,11 +82,16 @@ export default function AddStorePage() {
             <Transaction
                 chainId={SELECTED_CHAIN_ID}
                 calls={basenameRegisterCalls}
-                onError={(error) => showToast(error.message, "")}
-                onSuccess={(response) =>
-                    showToast("Store added successfully", "")
+                onError={(error) =>
+                    showToast(error.message, "", TOAST_TYPE.ERROR)
                 }
-                onStatus={(status) => console.log(status)}
+                onSuccess={(response) =>
+                    showToast(
+                        "Store added successfully",
+                        "",
+                        TOAST_TYPE.SUCCESS
+                    )
+                }
             >
                 <TransactionButton
                     className="mt-0 mr-auto ml-auto max-w-full rounded-xl p-4 "
