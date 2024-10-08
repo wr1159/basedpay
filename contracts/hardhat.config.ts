@@ -1,5 +1,6 @@
-import { HardhatUserConfig } from "hardhat/config";
+import { HardhatUserConfig, task } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
+import "./tasks/deploy-contracts";
 
 require("dotenv").config();
 
@@ -8,6 +9,11 @@ const config: HardhatUserConfig = {
         version: "0.8.23",
     },
     networks: {
+        hardhat: {
+            forking: {
+                url: "https://sepolia.base.org",
+            },
+        },
         // for mainnet
         "base-mainnet": {
             url: "https://mainnet.base.org",
