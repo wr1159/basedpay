@@ -19,17 +19,19 @@ const Toast = ({ message, transactionLink, onClose }: ToastProps) => {
                     <path d="M8 0C3.58 0 0 3.58 0 8C0 12.42 3.58 16 8 16C12.42 16 16 12.42 16 8C16 3.58 12.42 0 8 0ZM6.72667 11.5333L3.73333 8.54L4.67333 7.6L6.72667 9.65333L11.44 4.94L12.38 5.88L6.72667 11.5333Z" />
                 </svg>
             </div>
-            <div className="flex-1">
-                <p className="text-sm font-medium text-black">{message}</p>
-                <a
-                    href={transactionLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-indigo-600 hover:underline"
-                >
-                    View transaction
-                </a>
-            </div>
+            {transactionLink && (
+                <div className="flex-1">
+                    <p className="text-sm font-medium text-black">{message}</p>
+                    <a
+                        href={transactionLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-indigo-600 hover:underline"
+                    >
+                        View transaction
+                    </a>
+                </div>
+            )}
             <button
                 onClick={onClose}
                 className="text-gray-500 hover:text-black"
