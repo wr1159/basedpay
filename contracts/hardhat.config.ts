@@ -6,7 +6,14 @@ require("dotenv").config();
 
 const config: HardhatUserConfig = {
     solidity: {
-        version: "0.8.23",
+        compilers: [
+            {
+                version: "0.8.23",
+            },
+            {
+                version: "0.4.22",
+            },
+        ],
     },
     networks: {
         hardhat: {
