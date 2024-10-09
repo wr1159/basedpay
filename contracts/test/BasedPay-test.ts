@@ -1,12 +1,32 @@
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { expect } from "chai";
 import hre from "hardhat";
+import {
+    BASE_SEPOLIA_V3_SWAP_ROUTER,
+    BASE_SEPOLIA_WETH9,
+    BASE_SEPOLIA_XSGD,
+} from "../constant";
 
 describe("BasedPay", () => {
     const setupFixture = async () => {
-        const [owner, otherAccount] = await hre.ethers.getSigners();
+        await hre.network.provider.request({
+            method: "hardhat_reset",
+            params: [
+                {
+                    forking: {
+                        jsonRpcUrl: "https://sepolia.base.org",
+                        blockNumber: 16321818,
+                    },
+                },
+            ],
+        });
 
-        const basedPay = await hre.ethers.deployContract("BasedPay", owner);
+        const [owner, otherAccount] = await hre.ethers.getSigners();
+        const basedPay = await hre.ethers.deployContract(
+            "BasedPay",
+            [BASE_SEPOLIA_V3_SWAP_ROUTER],
+            owner
+        );
 
         return {
             basedPay,
@@ -126,6 +146,39 @@ describe("BasedPay", () => {
                 basedPay,
                 "OwnableUnauthorizedAccount"
             );
+        });
+    });
+    describe("Uniswap V3 Swap", function () {
+        it("should swap when given correct parameters", async function () {
+            const { basedPay, basedPayAddress, deployer } = await loadFixture(
+                setupFixture
+            );
+
+            const inputTokenAddress = BASE_SEPOLIA_WETH9; // WETH
+            const WETH9 = await hre.ethers.getContractAt(
+                "WETH9",
+                inputTokenAddress
+            );
+            const balance = await WETH9.balanceOf(deployer.address);
+            console.log(balance);
+
+            const outputTokenAddress = BASE_SEPOLIA_XSGD; // XSGD
+            const xsgd = await hre.ethers.getContractAt(
+                "XSGD",
+                outputTokenAddress
+            );
+            // Fix test
+            console.log(await xsgd.owner());
+            const amountOut = 3000000; // Same for now just to see if it works
+            const amountInMaximum = 3000000; // taken from balance of deployer
+            await WETH9.approve(basedPayAddress, amountInMaximum);
+            const amountIn = await basedPay.swapExactOutputSingle(
+                inputTokenAddress,
+                outputTokenAddress,
+                amountOut,
+                amountInMaximum
+            );
+            console.log("amountIn", amountIn);
         });
     });
 });
