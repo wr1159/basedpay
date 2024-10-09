@@ -30,7 +30,13 @@ contract BasedPay is Ownable {
         return uenToAddressMap[uen];
     }
 
-    function swapExactOutputSingle(address inputTokenAddress, address outputTokenAddress, uint256 amountOut, uint256 amountInMaximum) external returns (uint256 amountIn) {
+    function payMerchant(address inputTokenAddress, address outputTokenAddress, string memory uen, uint256 amountOut, uint256 amountInMaximum) external returns (uint256 amountIn) {
+        require(uenToAddressMap[uen] != address(0), "UEN not registered");
+        if (inputTokenAddress == outputTokenAddress) {
+            require(uenToAddressMap[uen] != address(0), "UEN not registered");
+            TransferHelper.safeTransferFrom(inputTokenAddress, msg.sender, uenToAddressMap[uen], amountOut);
+            return amountOut;
+        }
         // Transfer the specified amount of DAI to this contract.
         TransferHelper.safeTransferFrom(inputTokenAddress, msg.sender, address(this), amountInMaximum);
 
@@ -43,7 +49,7 @@ contract BasedPay is Ownable {
                 tokenIn: inputTokenAddress,
                 tokenOut: outputTokenAddress,
                 fee: 500, //0.05%
-                recipient: msg.sender,
+                recipient: uenToAddressMap[uen],
                 amountOut: amountOut,
                 amountInMaximum: amountInMaximum,
                 sqrtPriceLimitX96:0 

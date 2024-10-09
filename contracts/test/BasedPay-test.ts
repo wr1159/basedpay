@@ -27,10 +27,16 @@ describe("BasedPay", () => {
             [BASE_SEPOLIA_V3_SWAP_ROUTER],
             owner
         );
+        const weth9 = await hre.ethers.getContractAt(
+            "WETH9",
+            BASE_SEPOLIA_WETH9
+        );
+        const xsgd = await hre.ethers.getContractAt("XSGD", BASE_SEPOLIA_XSGD);
 
         return {
             basedPay,
             basedPayAddress: await basedPay.getAddress(),
+            weth9,
             deployer: owner,
             otherAccount: otherAccount,
             accounts: await hre.ethers.getSigners(),
@@ -142,34 +148,66 @@ describe("BasedPay", () => {
             ).to.be.revertedWith("Ownable: caller is not the owner");
         });
     });
-    describe("Uniswap V3 Swap", function () {
-        it("should swap when given correct parameters", async function () {
-            const { basedPay, basedPayAddress, deployer } = await loadFixture(
-                setupFixture
-            );
+    describe("Swap & Pay function", function () {
+        it("should swap when given different tokens", async function () {
+            const { basedPay, basedPayAddress, otherAccount } =
+                await loadFixture(setupFixture);
+            const uen = "123456789X";
+            // Add a new mapping
+            await basedPay.connect(otherAccount).register(uen);
 
             const inputTokenAddress = BASE_SEPOLIA_WETH9; // WETH
-            const WETH9 = await hre.ethers.getContractAt(
+            const weth9 = await hre.ethers.getContractAt(
                 "WETH9",
                 inputTokenAddress
             );
-            const balance = await WETH9.balanceOf(deployer.address);
 
             const outputTokenAddress = BASE_SEPOLIA_XSGD; // XSGD
             const xsgd = await hre.ethers.getContractAt(
                 "XSGD",
                 outputTokenAddress
             );
-            // Fix test
+            const balanceBeforeSwap = await xsgd.balanceOf(
+                otherAccount.address
+            );
             const amountOut = 3000000; // Same for now just to see if it works
             const amountInMaximum = 3000000; // taken from balance of deployer
-            await WETH9.approve(basedPayAddress, amountInMaximum);
-            await basedPay.swapExactOutputSingle(
+            await weth9.approve(basedPayAddress, amountInMaximum);
+            await basedPay.payMerchant(
                 inputTokenAddress,
                 outputTokenAddress,
+                uen,
                 amountOut,
                 amountInMaximum
             );
+            const balanceAfterSwap = await xsgd.balanceOf(otherAccount.address);
+            expect(balanceAfterSwap).to.be.gt(balanceBeforeSwap);
+        });
+
+        it("should send when given same tokens", async function () {
+            const { basedPay, basedPayAddress, weth9, otherAccount } =
+                await loadFixture(setupFixture);
+            const uen = "123456789X";
+            // Add a new mapping
+            await basedPay.connect(otherAccount).register(uen);
+
+            const balanceBeforeSwap = await weth9.balanceOf(
+                otherAccount.address
+            );
+            const amountOut = 2000000; // Same for now just to see if it works
+            const amountInMaximum = 3000000; // taken from balance of deployer
+            await weth9.approve(basedPayAddress, amountInMaximum);
+            await basedPay.payMerchant(
+                BASE_SEPOLIA_WETH9,
+                BASE_SEPOLIA_WETH9,
+                uen,
+                amountOut,
+                amountInMaximum
+            );
+            const balanceAfterSwap = await weth9.balanceOf(
+                otherAccount.address
+            );
+            expect(balanceAfterSwap).to.be.gt(balanceBeforeSwap);
         });
     });
 });
