@@ -73,6 +73,22 @@ export const registrarABI = [
     },
 ];
 
+export const BasedPayAbi = [
+    {
+        inputs: [
+            {
+                internalType: "string",
+                name: "uen",
+                type: "string",
+            },
+        ],
+        name: "register",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+    },
+];
+
 // Basenames Registrar Controller Contract Address.
 // export const BaseNamesRegistrarControllerAddress =
 // "0x4cCb0BB02FCABA27e82a56646E81d8c5bC4119a5"; // Base Mainnet
@@ -83,6 +99,8 @@ export const BaseNamesRegistrarControllerAddress =
 // L2 Resolver Contract Address.
 // const L2ResolverAddress = "0xC6d566A56A1aFf6508b41f6c90ff131615583BCD"; // Base Mainnet
 const L2ResolverAddress = "0x6533C94869D28fAA8dF77cc63f9e2b2D6Cf77eBA"; // Base Sepolia
+
+export const BasedPayAddress = "0xa0Fd96AC21016FC242A4D02c1a9195b2688Ee242"; // Hardhat
 
 // Create register contract method arguments.
 export function createRegisterContractMethodArgs(

@@ -7,20 +7,25 @@ import {
     TransactionStatusAction,
     TransactionStatusLabel,
 } from "@coinbase/onchainkit/transaction";
-import { BASE_SEPOLIA_CHAIN_ID } from "src/constants";
+import { SELECTED_CHAIN_ID } from "src/constants";
 import { useAccount } from "wagmi";
 import {
+    BasedPayAbi,
+    BasedPayAddress,
     BaseNamesRegistrarControllerAddress,
     createRegisterContractMethodArgs,
 } from "src/utils/register-basename";
 import { useState } from "react";
-import { parseEther } from "viem";
+import { encodeFunctionData, parseEther } from "viem";
 import { useToastContext } from "src/context/ToastContext";
 import PhoneVerification from "src/components/merchant/PhoneVerification";
+import { useSearchParams } from "next/navigation";
 
 export default function AddStorePage() {
     const [storeName, setStoreName] = useState("store-name");
     const [phoneVerified, setPhoneVerified] = useState(false);
+    const searchParams = useSearchParams();
+    const uen = searchParams.get("uen") || "";
     const account = useAccount();
     const { showToast } = useToastContext();
 
@@ -39,6 +44,14 @@ export default function AddStorePage() {
             data: registerData as `0x${string}`,
             value: parseEther("0.002"),
         },
+        {
+            to: BasedPayAddress as `0x${string}`,
+            data: encodeFunctionData({
+                abi: BasedPayAbi,
+                functionName: "register",
+                args: [uen],
+            }),
+        },
     ];
 
     return (
@@ -56,22 +69,28 @@ export default function AddStorePage() {
                 />
             </div>
             <PhoneVerification setPhoneVerified={setPhoneVerified} />
+            <div className="flex gap-2 my-8 flex-col">
+                <p className="text-xl">UEN</p>
+                <p className="text-gray-500">
+                    Please ensure that your Unique Entity Number (UEN) is
+                    correct
+                </p>
+                <p className="text-2xl font-bold">{uen}</p>
+            </div>
 
             <Transaction
-                chainId={BASE_SEPOLIA_CHAIN_ID}
+                chainId={SELECTED_CHAIN_ID}
                 calls={basenameRegisterCalls}
-                onError={(error) => showToast(error.message, error.code)}
+                onError={(error) => showToast(error.message, "")}
                 onSuccess={(response) =>
-                    showToast(
-                        "Store added successfully",
-                        response.transactionReceipts[0].toString()
-                    )
+                    showToast("Store added successfully", "")
                 }
+                onStatus={(status) => console.log(status)}
             >
                 <TransactionButton
                     className="mt-0 mr-auto ml-auto max-w-full rounded-xl p-4 "
                     text="Add Store"
-                    disabled={!storeName || !phoneVerified}
+                    disabled={!storeName || !phoneVerified || !uen}
                 />
                 <TransactionStatus>
                     <TransactionStatusLabel />

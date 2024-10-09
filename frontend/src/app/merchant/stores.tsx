@@ -12,11 +12,8 @@ export default function Stores() {
     const onScan = (data: any) => {
         if (data) {
             setIsScanning(false);
-            const scanData = data.text;
-            console.log(scanData);
-            // TODO: Add store to the list
+            router.replace(`/merchant/add-store?uen=${data.text}`);
         }
-        router.replace(`/merchant/add-store?data=${data}`);
     };
 
     return (
