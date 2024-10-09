@@ -1,6 +1,11 @@
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { expect } from "chai";
 import hre from "hardhat";
+import {
+    BASE_SEPOLIA_V3_SWAP_ROUTER,
+    BASE_SEPOLIA_WETH9,
+    BASE_SEPOLIA_XSGD,
+} from "../constant";
 
 describe("BasedPay", () => {
     const setupFixture = async () => {
@@ -17,12 +22,9 @@ describe("BasedPay", () => {
         });
 
         const [owner, otherAccount] = await hre.ethers.getSigners();
-        const uniswapV3SwapRouterAddress =
-            "0x94cC0AaC535CCDB3C01d6787D6413C739ae12bc4";
-
         const basedPay = await hre.ethers.deployContract(
             "BasedPay",
-            [uniswapV3SwapRouterAddress],
+            [BASE_SEPOLIA_V3_SWAP_ROUTER],
             owner
         );
 
@@ -152,8 +154,7 @@ describe("BasedPay", () => {
                 setupFixture
             );
 
-            const inputTokenAddress =
-                "0x4200000000000000000000000000000000000006"; // WETH
+            const inputTokenAddress = BASE_SEPOLIA_WETH9; // WETH
             const WETH9 = await hre.ethers.getContractAt(
                 "WETH9",
                 inputTokenAddress
@@ -161,8 +162,7 @@ describe("BasedPay", () => {
             const balance = await WETH9.balanceOf(deployer.address);
             console.log(balance);
 
-            const outputTokenAddress =
-                "0xa57766B1641bCed760cb2d2e7C9B17B888Bc410b"; // XSGD
+            const outputTokenAddress = BASE_SEPOLIA_XSGD; // XSGD
             const xsgd = await hre.ethers.getContractAt(
                 "XSGD",
                 outputTokenAddress
