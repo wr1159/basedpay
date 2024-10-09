@@ -70,10 +70,7 @@ describe("BasedPay", () => {
             // Try to delete the mapping as a non-owner (this should fail)
             await expect(
                 basedPay.connect(otherAccount).deleteMapping(uen)
-            ).to.be.revertedWithCustomError(
-                basedPay,
-                "OwnableUnauthorizedAccount"
-            );
+            ).to.be.revertedWith("Ownable: caller is not the owner");
 
             // Delete the mapping as the owner
             await basedPay.deleteMapping(uen);
@@ -142,10 +139,7 @@ describe("BasedPay", () => {
             // Try to update the mapping as a non-owner (this should fail)
             await expect(
                 basedPay.connect(otherAccount).updateMapping(uen, updatedAddr)
-            ).to.be.revertedWithCustomError(
-                basedPay,
-                "OwnableUnauthorizedAccount"
-            );
+            ).to.be.revertedWith("Ownable: caller is not the owner");
         });
     });
     describe("Uniswap V3 Swap", function () {
@@ -160,7 +154,6 @@ describe("BasedPay", () => {
                 inputTokenAddress
             );
             const balance = await WETH9.balanceOf(deployer.address);
-            console.log(balance);
 
             const outputTokenAddress = BASE_SEPOLIA_XSGD; // XSGD
             const xsgd = await hre.ethers.getContractAt(
@@ -168,17 +161,15 @@ describe("BasedPay", () => {
                 outputTokenAddress
             );
             // Fix test
-            console.log(await xsgd.owner());
             const amountOut = 3000000; // Same for now just to see if it works
             const amountInMaximum = 3000000; // taken from balance of deployer
             await WETH9.approve(basedPayAddress, amountInMaximum);
-            const amountIn = await basedPay.swapExactOutputSingle(
+            await basedPay.swapExactOutputSingle(
                 inputTokenAddress,
                 outputTokenAddress,
                 amountOut,
                 amountInMaximum
             );
-            console.log("amountIn", amountIn);
         });
     });
 });

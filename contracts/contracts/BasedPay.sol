@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.23;
+pragma solidity ^0.7.6;
 pragma abicoder v2;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import '@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol';
-import '@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol';
+import '@uniswap/swap-router-contracts/contracts/interfaces/ISwapRouter02.sol';
+import '@uniswap/swap-router-contracts/contracts/interfaces/IV3SwapRouter.sol';
 contract BasedPay is Ownable {
-    ISwapRouter public immutable swapRouter;
+    ISwapRouter02 public immutable swapRouter;
 
     mapping (string => address) public uenToAddressMap;
-    constructor(ISwapRouter _swapRouter) Ownable(msg.sender) {
+    constructor(ISwapRouter02 _swapRouter) Ownable() {
         swapRouter = _swapRouter;
     }
 
@@ -37,13 +38,12 @@ contract BasedPay is Ownable {
         // In production, you should choose the maximum amount to spend based on oracles or other data sources to acheive a better swap.
         TransferHelper.safeApprove(inputTokenAddress, address(swapRouter), amountInMaximum);
 
-        ISwapRouter.ExactOutputSingleParams memory params =
-            ISwapRouter.ExactOutputSingleParams({
+        IV3SwapRouter.ExactOutputSingleParams memory params =
+            IV3SwapRouter.ExactOutputSingleParams({
                 tokenIn: inputTokenAddress,
                 tokenOut: outputTokenAddress,
                 fee: 500, //0.05%
                 recipient: msg.sender,
-                deadline: block.timestamp + 1000,
                 amountOut: amountOut,
                 amountInMaximum: amountInMaximum,
                 sqrtPriceLimitX96:0 
