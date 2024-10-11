@@ -50,111 +50,89 @@ describe("BasedPay", () => {
         });
     });
 
-    describe("Register", function () {
-        it("Should allow anyone to register and add a mapping", async function () {
+    describe("Store Management", function () {
+        it("Should allow anyone to register a store", async function () {
             const { basedPay, deployer } = await loadFixture(setupFixture);
             const uen = "123456789X";
-            const addr = deployer.address;
+            const storeName = "Test Store";
 
-            // Add a new mapping
-            await basedPay.register(uen);
+            await basedPay.registerStore(uen, storeName);
 
-            // Check the stored address for the given UEN
-            expect(await basedPay.getAddressFromUen(uen)).to.equal(addr);
+            const stores = await basedPay.getStores(deployer.address);
+            expect(stores.length).to.equal(1);
+            expect(stores[0].uen).to.equal(uen);
+            expect(stores[0].name).to.equal(storeName);
         });
-    });
 
-    describe("Delete Mapping", function () {
-        it("Should only allow the owner to delete a mapping", async function () {
-            const { basedPay, otherAccount } = await loadFixture(setupFixture);
+        it("Should allow store owner to delete their store", async function () {
+            const { basedPay, deployer } = await loadFixture(setupFixture);
             const uen = "123456789X";
-            const addr = otherAccount.address;
+            const storeName = "Test Store";
 
-            // Add a new mapping
-            await basedPay.register(uen);
+            await basedPay.registerStore(uen, storeName);
+            await basedPay.deleteStore(uen);
 
-            // Try to delete the mapping as a non-owner (this should fail)
-            await expect(
-                basedPay.connect(otherAccount).deleteMapping(uen)
-            ).to.be.revertedWith("Ownable: caller is not the owner");
+            const stores = await basedPay.getStores(deployer.address);
+            expect(stores.length).to.equal(0);
+        });
 
-            // Delete the mapping as the owner
-            await basedPay.deleteMapping(uen);
+        it("Should allow store owner to update their store name", async function () {
+            const { basedPay, deployer } = await loadFixture(setupFixture);
+            const uen = "123456789X";
+            const storeName = "Test Store";
+            const newStoreName = "Updated Test Store";
 
-            // Check if the mapping was deleted (should return address(0))
-            expect(await basedPay.getAddressFromUen(uen)).to.equal(
-                hre.ethers.ZeroAddress
-            );
+            await basedPay.registerStore(uen, storeName);
+            await basedPay.updateStore(uen, newStoreName);
+
+            const stores = await basedPay.getStores(deployer.address);
+            expect(stores[0].name).to.equal(newStoreName);
+        });
+
+        it("Should not allow non-owner to delete or update a store", async function () {
+            const { basedPay, deployer, otherAccount } = await loadFixture(setupFixture);
+            const uen = "123456789X";
+            const storeName = "Test Store";
+
+            await basedPay.registerStore(uen, storeName);
+
+            await expect(basedPay.connect(otherAccount).deleteStore(uen))
+                .to.be.revertedWith("Not authorized to delete this store");
+
+            await expect(basedPay.connect(otherAccount).updateStore(uen, "New Name"))
+                .to.be.revertedWith("Not authorized to update this store");
         });
     });
 
-    describe("Get Mapping", function () {
+    describe("Get Address From UEN", function () {
         it("Should return the correct address for a given UEN", async function () {
-            const { basedPay, otherAccount } = await loadFixture(setupFixture);
+            const { basedPay, deployer } = await loadFixture(setupFixture);
             const uen = "987654321Y";
-            const addr = otherAccount.address;
+            const storeName = "Test Store";
 
-            // Add a new mapping
-            await basedPay.connect(otherAccount).register(uen);
+            await basedPay.registerStore(uen, storeName);
 
-            // Retrieve and check the address for the given UEN
-            expect(await basedPay.getAddressFromUen(uen)).to.equal(addr);
+            expect(await basedPay.getAddressFromUen(uen)).to.equal(deployer.address);
         });
 
         it("Should return address(0) for a non-existent UEN", async function () {
             const { basedPay } = await loadFixture(setupFixture);
             const uen = "nonexistentUEN";
 
-            // Check that an unregistered UEN returns the zero address
             expect(await basedPay.getAddressFromUen(uen)).to.equal(
                 hre.ethers.ZeroAddress
             );
         });
     });
-    describe("Update Mapping", function () {
-        it("Should allow only the owner to update a mapping", async function () {
-            const { basedPay, deployer, otherAccount } = await loadFixture(
-                setupFixture
-            );
-            const uen = "123456789X";
-            const initialAddr = otherAccount.address;
-            const updatedAddr = deployer.address; // Assume we want to update to owner's address
 
-            // Add a new mapping
-            await basedPay.connect(otherAccount).register(uen);
-
-            expect(await basedPay.getAddressFromUen(uen)).to.equal(initialAddr);
-
-            // Update the mapping as the owner
-            await basedPay.updateMapping(uen, updatedAddr);
-
-            // Check the updated address for the given UEN
-            expect(await basedPay.getAddressFromUen(uen)).to.equal(updatedAddr);
-        });
-
-        it("Should revert if a non-owner tries to update a mapping", async function () {
-            const { basedPay, deployer, otherAccount } = await loadFixture(
-                setupFixture
-            );
-            const uen = "123456789X";
-            const updatedAddr = deployer.address;
-
-            // Add a new mapping
-            await basedPay.register(uen);
-
-            // Try to update the mapping as a non-owner (this should fail)
-            await expect(
-                basedPay.connect(otherAccount).updateMapping(uen, updatedAddr)
-            ).to.be.revertedWith("Ownable: caller is not the owner");
-        });
-    });
     describe("Swap & Pay function", function () {
         it("should swap when given different tokens", async function () {
             const { basedPay, basedPayAddress, otherAccount } =
                 await loadFixture(setupFixture);
             const uen = "123456789X";
-            // Add a new mapping
-            await basedPay.connect(otherAccount).register(uen);
+            const storeName = "Test Store";
+            
+            await basedPay.connect(otherAccount).registerStore(uen, storeName);
 
             const inputTokenAddress = BASE_SEPOLIA_WETH9; // WETH
             const weth9 = await hre.ethers.getContractAt(
@@ -188,8 +166,9 @@ describe("BasedPay", () => {
             const { basedPay, basedPayAddress, weth9, otherAccount } =
                 await loadFixture(setupFixture);
             const uen = "123456789X";
-            // Add a new mapping
-            await basedPay.connect(otherAccount).register(uen);
+            const storeName = "Test Store";
+            
+            await basedPay.connect(otherAccount).registerStore(uen, storeName);
 
             const balanceBeforeSwap = await weth9.balanceOf(
                 otherAccount.address
