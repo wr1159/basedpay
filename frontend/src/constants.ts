@@ -27,3 +27,28 @@ export const tokenOptions = [
         symbol: "USDC",
     },
 ];
+export const BASE_SEPOLIA_XSGD = "0xa57766B1641bCed760cb2d2e7C9B17B888Bc410b";
+export const XSGD_ABI = [
+    {
+        anonymous: false,
+        inputs: [
+            {       
+                "indexed": true,
+                "name": "from",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "name": "to",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "value",
+                "type": "uint256"
+            }
+        ],
+        name: "Transfer",
+        type: "event"
+    }
+] as const;
