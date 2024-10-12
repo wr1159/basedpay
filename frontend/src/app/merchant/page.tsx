@@ -21,14 +21,14 @@ export default function MerchantPage() {
         abi: XSGD_ABI,
         eventName: "Transfer",
         onLogs: (logs) => {
-            logs.forEach((log) => {
+            logs.forEach((log: any) => {
                 const { from, to, value } = log.args;
                 if (
                     to !== merchantAddress ||
                     log.blockNumber == lastBlockNumber
                 )
                     return;
-                setLastBlockNumber(log.blockNumber);
+                log.blockNumber && setLastBlockNumber(log.blockNumber);
                 const formattedValue = formatEther(value ?? 0);
                 showToast(
                     `Received ${formattedValue} XSGD from ${from}`,

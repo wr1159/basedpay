@@ -11,7 +11,7 @@ export default function TokenBalances({
     const { data: balances } = useReadContracts({
         contracts: tokenOptions.map((token) => ({
             address: token.address as `0x${string}`,
-            abi: XSGD_ABI,
+            abi: XSGD_ABI as any,
             functionName: "balanceOf",
             args: [walletAddress],
         })),
