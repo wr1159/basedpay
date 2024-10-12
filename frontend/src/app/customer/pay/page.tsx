@@ -1,8 +1,8 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { SELECTED_CHAIN_ID, tokenOptions } from "src/constants";
+import { useMemo, useState } from "react";
+import { SELECTED_CHAIN_ID, tokenOptions, XSGD_ABI } from "src/constants";
 import { BasedPayAbi, BasedPayAddress } from "src/utils/register-basename";
 import { useReadContract } from "wagmi";
 import {
@@ -12,12 +12,14 @@ import {
     TransactionStatusAction,
     TransactionStatusLabel,
 } from "@coinbase/onchainkit/transaction";
-import { parseEther } from "viem";
+import { encodeFunctionData, formatUnits, parseEther } from "viem";
 import { useToastContext } from "src/context/ToastContext";
 import { Token, TokenSelectDropdown } from "@coinbase/onchainkit/token";
 import { TOAST_TYPE } from "src/models/toast";
+import { useAccount } from "wagmi";
 
 export default function CustomerPage() {
+    const account = useAccount();
     const [amount, setAmount] = useState<string>();
     const [token, setToken] = useState<Token>();
     const { showToast } = useToastContext();
@@ -32,12 +34,30 @@ export default function CustomerPage() {
         args: [uen],
     });
 
-    const transferCall = [
-        {
-            to: paymentAdress as `0x${string}`,
-            value: parseEther(amount?.toString() || "0"),
-        },
-    ];
+    const transferCall = useMemo(() => {
+        if (!token || !paymentAdress || !amount) return [];
+        return [
+            {
+                to: token.address as `0x${string}`,
+                data: encodeFunctionData({
+                    abi: XSGD_ABI,
+                    functionName: "transfer",
+                    args: [paymentAdress, parseEther(amount)],
+                }),
+            },
+        ];
+    }, [token, paymentAdress, amount]);
+
+    const {
+        data: tokenBalance,
+        error,
+        status,
+    } = useReadContract({
+        address: token?.address as `0x${string}`,
+        abi: XSGD_ABI,
+        functionName: "balanceOf",
+        args: [account?.address],
+    });
 
     return (
         <>
@@ -47,7 +67,7 @@ export default function CustomerPage() {
             <div className="font-normal text-gray-600 text-lg not-italic tracking-[-1.2px] mb-8">
                 {paymentAdress as string}
             </div>
-            <div className="flex justify-between items-center gap-2 my-8">
+            <div className="flex justify-between items-center gap-2 mt-8">
                 <input
                     className="flex justify-between items-center w-full rounded-xl border-2 border-gray-300 p-4 h-4"
                     placeholder="Amount"
@@ -60,6 +80,14 @@ export default function CustomerPage() {
                     setToken={setToken}
                     options={tokenOptions}
                 />
+            </div>
+            <div className="font-normal text-gray-600 text-lg not-italic tracking-[-1.2px] mb-8">
+                {token && !!tokenBalance && (
+                    <>
+                        Your balance:{" "}
+                        {`${formatUnits(tokenBalance as bigint, token.decimals)} ${token.symbol}`}
+                    </>
+                )}
             </div>
 
             <Transaction
