@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function Page() {
     return (
         <div className="rounded-xl bg-[#F3F4F6] px-4 py-[11px] max-w-xl">
@@ -14,12 +16,18 @@ export default function Page() {
                 I am a...
             </p>
             <div className="flex gap-4 w-full justify-center">
-                <button className="bg-indigo-600 text-white rounded-lg px-4 py-2 mt-2 grow">
-                    <a href="/customer">Customer</a>
-                </button>
-                <button className="bg-indigo-600 text-white rounded-lg px-4 py-2 mt-2 grow">
-                    <a href="/merchant">Merchant</a>
-                </button>
+                <Link
+                    className="bg-indigo-600 text-white rounded-lg px-4 py-2 mt-2 grow"
+                    href="/customer"
+                >
+                    Customer
+                </Link>
+                <Link
+                    href="/merchant"
+                    className="bg-indigo-600 text-white rounded-lg px-4 py-2 mt-2 grow"
+                >
+                    Merchant
+                </Link>
             </div>
         </div>
     );
