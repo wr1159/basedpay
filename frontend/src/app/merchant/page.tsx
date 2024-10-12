@@ -7,6 +7,7 @@ import { tokenOptions, BASE_SEPOLIA_XSGD, XSGD_ABI } from "src/constants";
 import { TOAST_TYPE } from "src/models/toast";
 import { useAccount, useWatchContractEvent } from "wagmi";
 import { formatEther } from "ethers/lib/utils";
+import TokenBalances from "src/components/TokenBalances";
 
 export default function MerchantPage() {
     const { showToast } = useToastContext();
@@ -35,17 +36,7 @@ export default function MerchantPage() {
 
     return (
         <>
-            <div className="font-normal text-indigo-600 text-3xl not-italic tracking-[-1.2px] mb-8">
-                Wallet Balance
-            </div>
-            {tokenOptions.map((token) => (
-                <TokenRow
-                    token={token}
-                    amount="0.1"
-                    className="bg-slate-100 rounded-lg py-4"
-                    key={token.name}
-                />
-            ))}
+            <TokenBalances walletAddress={merchantAddress || "0x"} />
             <Stores />
         </>
     );
