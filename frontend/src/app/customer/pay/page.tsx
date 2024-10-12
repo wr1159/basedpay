@@ -99,6 +99,12 @@ export default function CustomerPage() {
                 onSuccess={(response) =>
                     showToast("Funds transferred", "", TOAST_TYPE.SUCCESS)
                 }
+                capabilities={{
+                    paymasterService: {
+                        url: process.env
+                            .PAYMASTER_AND_BUNDLER_ENDPOINT as string,
+                    },
+                }}
             >
                 <TransactionButton
                     className="mt-0 mr-auto ml-auto max-w-full rounded-xl p-4 "

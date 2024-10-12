@@ -96,6 +96,12 @@ export default function AddStorePage() {
                         router.push("/merchant");
                     }, 2000);
                 }}
+                capabilities={{
+                    paymasterService: {
+                        url: process.env
+                            .PAYMASTER_AND_BUNDLER_ENDPOINT as string,
+                    },
+                }}
             >
                 <TransactionButton
                     className="mt-0 mr-auto ml-auto max-w-full rounded-xl p-4 "
