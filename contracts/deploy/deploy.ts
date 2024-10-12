@@ -1,19 +1,15 @@
-// scripts/deploy.ts
-import { ethers } from "hardhat";
+import { DeployFunction } from "hardhat-deploy/types";
+import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { BASE_SEPOLIA_V3_SWAP_ROUTER } from "../constant";
 
-async function main() {
-    const [deployer] = await ethers.getSigners();
-    console.log("Deploying contracts with the account:", deployer.address);
+const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+    const { deployer } = await hre.getNamedAccounts();
 
-    const BasedPay = await ethers.getContractFactory("BasedPay");
-    const basedPay = await BasedPay.deploy(BASE_SEPOLIA_V3_SWAP_ROUTER);
-
-    const address = await basedPay.getAddress();
-    console.log("BasedPay deployed to:", address);
-}
-
-main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-});
+    await hre.deployments.deploy("BasedPay", {
+        from: deployer,
+        log: true,
+        args: [BASE_SEPOLIA_V3_SWAP_ROUTER],
+    });
+};
+export default func;
+func.tags = ["basedpay"];
