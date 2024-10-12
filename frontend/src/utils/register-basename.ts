@@ -81,8 +81,13 @@ export const BasedPayAbi = [
                 name: "uen",
                 type: "string",
             },
+            {
+                internalType: "string",
+                name: "name",
+                type: "string",
+            },
         ],
-        name: "register",
+        name: "registerStore",
         outputs: [],
         stateMutability: "nonpayable",
         type: "function",
@@ -106,6 +111,37 @@ export const BasedPayAbi = [
         stateMutability: "view",
         type: "function",
     },
+    {
+        inputs: [
+            {
+                internalType: "address",
+                name: "merchant",
+                type: "address",
+            },
+        ],
+        name: "getStores",
+        outputs: [
+            {
+                components: [
+                    {
+                        internalType: "string",
+                        name: "uen",
+                        type: "string",
+                    },
+                    {
+                        internalType: "string",
+                        name: "name",
+                        type: "string",
+                    },
+                ],
+                internalType: "struct BasedPay.Store[]",
+                name: "",
+                type: "tuple[]",
+            },
+        ],
+        stateMutability: "view",
+        type: "function",
+    },
 ];
 
 // Basenames Registrar Controller Contract Address.
@@ -119,7 +155,7 @@ export const BaseNamesRegistrarControllerAddress =
 // const L2ResolverAddress = "0xC6d566A56A1aFf6508b41f6c90ff131615583BCD"; // Base Mainnet
 const L2ResolverAddress = "0x6533C94869D28fAA8dF77cc63f9e2b2D6Cf77eBA"; // Base Sepolia
 
-export const BasedPayAddress = "0xa0Fd96AC21016FC242A4D02c1a9195b2688Ee242"; // Hardhat
+export const BasedPayAddress = "0xe5fEDc634D0C8c17e8c57E969341532fa30a93CF"; // Hardhat
 
 // Create register contract method arguments.
 export function createRegisterContractMethodArgs(

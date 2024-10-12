@@ -2,7 +2,6 @@
 
 import { TokenRow } from "@coinbase/onchainkit/token";
 import Stores from "./stores";
-import { useEffect } from "react";
 import { useToastContext } from "src/context/ToastContext";
 import { tokenOptions, BASE_SEPOLIA_XSGD, XSGD_ABI } from "src/constants";
 import { TOAST_TYPE } from "src/models/toast";
@@ -12,13 +11,13 @@ import { formatEther } from "ethers/lib/utils";
 export default function MerchantPage() {
     const { showToast } = useToastContext();
     const { address: merchantAddress } = useAccount();
-    const notificationSound = new Audio('/notif.wav');
+    const notificationSound = new Audio("/notif.wav");
 
     // listen for Transfer events
     useWatchContractEvent({
         address: BASE_SEPOLIA_XSGD,
         abi: XSGD_ABI,
-        eventName: 'Transfer',
+        eventName: "Transfer",
         onLogs: (logs) => {
             logs.forEach((log) => {
                 const { from, to, value } = log.args;
@@ -30,10 +29,9 @@ export default function MerchantPage() {
                     TOAST_TYPE.SUCCESS
                 );
                 notificationSound.play();
-            })
-        }
-    })
-
+            });
+        },
+    });
 
     return (
         <>
@@ -45,6 +43,7 @@ export default function MerchantPage() {
                     token={token}
                     amount="0.1"
                     className="bg-slate-100 rounded-lg py-4"
+                    key={token.name}
                 />
             ))}
             <Stores />

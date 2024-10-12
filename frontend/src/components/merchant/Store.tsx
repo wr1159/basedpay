@@ -2,9 +2,10 @@ import { TokenRow } from "@coinbase/onchainkit/token";
 
 interface StoreProps {
     name: string;
+    uen: string;
 }
 
-export default function Store({ name }: StoreProps) {
+export default function Store({ name, uen }: StoreProps) {
     return (
         <TokenRow
             token={{
@@ -13,7 +14,7 @@ export default function Store({ name }: StoreProps) {
                 decimals: 18,
                 image: "https://w7.pngwing.com/pngs/109/15/png-transparent-computer-icons-badmintonclick-store-rectangle-logo-black-thumbnail.png",
                 name: name,
-                symbol: "Store address",
+                symbol: uen,
             }}
             className="rounded-lg py-4 my-4"
         />

@@ -19,7 +19,7 @@ import { useState } from "react";
 import { encodeFunctionData, parseEther } from "viem";
 import { useToastContext } from "src/context/ToastContext";
 import PhoneVerification from "src/components/merchant/PhoneVerification";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { TOAST_TYPE } from "src/models/toast";
 
 export default function AddStorePage() {
@@ -29,6 +29,7 @@ export default function AddStorePage() {
     const uen = searchParams.get("uen") || "";
     const account = useAccount();
     const { showToast } = useToastContext();
+    const router = useRouter();
 
     const registerData =
         account?.address &&
@@ -49,8 +50,8 @@ export default function AddStorePage() {
             to: BasedPayAddress as `0x${string}`,
             data: encodeFunctionData({
                 abi: BasedPayAbi,
-                functionName: "register",
-                args: [uen],
+                functionName: "registerStore",
+                args: [uen, storeName],
             }),
         },
     ];
@@ -85,13 +86,16 @@ export default function AddStorePage() {
                 onError={(error) =>
                     showToast(error.message, "", TOAST_TYPE.ERROR)
                 }
-                onSuccess={(response) =>
+                onSuccess={(response) => {
                     showToast(
                         "Store added successfully",
                         "",
                         TOAST_TYPE.SUCCESS
-                    )
-                }
+                    );
+                    setTimeout(() => {
+                        router.push("/merchant");
+                    }, 2000);
+                }}
             >
                 <TransactionButton
                     className="mt-0 mr-auto ml-auto max-w-full rounded-xl p-4 "
