@@ -36,7 +36,9 @@ const Toast = ({ message, transactionLink, type, onClose }: ToastProps) => {
                 )}
             </div>
             <div className="flex-1">
-                <p className="text-sm font-medium text-black">{message}</p>
+                <p className="text-sm font-medium text-black break-all">
+                    {message}
+                </p>
                 {transactionLink && (
                     <a
                         href={transactionLink}

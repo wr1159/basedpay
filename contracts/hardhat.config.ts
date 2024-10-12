@@ -1,7 +1,7 @@
-import { HardhatUserConfig, task } from "hardhat/config";
+import { HardhatUserConfig } from "hardhat/config";
 import "hardhat-deploy";
 import "@nomicfoundation/hardhat-toolbox";
-import "./tasks/deploy-contracts";
+import "./tasks/send-xsgd";
 
 require("dotenv").config();
 
