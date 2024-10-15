@@ -2,8 +2,13 @@
 
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
-import { SELECTED_CHAIN_ID, tokenOptions, XSGD_ABI } from "src/constants";
-import { BasedPayAbi, BasedPayAddress } from "src/utils/register-basename";
+import {
+    BasedPayAddress,
+    SELECTED_CHAIN_ID,
+    tokenOptions,
+    XSGD_ABI,
+} from "src/constants";
+import { BasedPayAbi } from "src/utils/register-basename";
 import { useReadContract } from "wagmi";
 import {
     Transaction,

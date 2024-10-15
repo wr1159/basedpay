@@ -1,6 +1,13 @@
 export const BASE_SEPOLIA_CHAIN_ID = 84532;
 export const HARDHAT_CHAIN_ID = 31337;
-export const SELECTED_CHAIN_ID = HARDHAT_CHAIN_ID;
+export const SELECTED_CHAIN_ID = BASE_SEPOLIA_CHAIN_ID;
+
+// Conntract Addresses
+export const BASE_SEPOLIA_XSGD = "0xa57766B1641bCed760cb2d2e7C9B17B888Bc410b";
+export const BASE_SEPOLIA_USDC = "0xD93b47c1c2a03C6e8f19AC8Af84021E74C669F5f";
+// export const BasedPayAddress = "0xe5fEDc634D0C8c17e8c57E969341532fa30a93CF"; // Hardhat
+export const BasedPayAddress = "0x7E5b621792fb8cCfA9F668747848Ade25642bB41";
+
 export const mintContractAddress = "0xA3e40bBe8E8579Cd2619Ef9C6fEA362b760dac9f";
 export const mintABI = [
     {
@@ -17,9 +24,6 @@ export const mintABI = [
         type: "function",
     },
 ] as const;
-
-export const BASE_SEPOLIA_XSGD = "0xa57766B1641bCed760cb2d2e7C9B17B888Bc410b";
-export const BASE_SEPOLIA_USDC = "0x036CbD53842c5426634e7929541eC2318f3dCF7e";
 
 export const XSGD_ABI = [
     {

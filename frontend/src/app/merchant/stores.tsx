@@ -3,7 +3,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Store from "src/components/merchant/Store";
 import Scanner from "src/components/Scanner";
-import { BasedPayAbi, BasedPayAddress } from "src/utils/register-basename";
+import { BasedPayAddress } from "src/constants";
+import { BasedPayAbi } from "src/utils/register-basename";
 import { useAccount, useReadContract } from "wagmi";
 
 interface Store {

@@ -7,11 +7,10 @@ import {
     TransactionStatusAction,
     TransactionStatusLabel,
 } from "@coinbase/onchainkit/transaction";
-import { SELECTED_CHAIN_ID } from "src/constants";
+import { BasedPayAddress, SELECTED_CHAIN_ID } from "src/constants";
 import { useAccount } from "wagmi";
 import {
     BasedPayAbi,
-    BasedPayAddress,
     BaseNamesRegistrarControllerAddress,
     createRegisterContractMethodArgs,
 } from "src/utils/register-basename";
@@ -106,7 +105,7 @@ export default function AddStorePage() {
                 <TransactionButton
                     className="mt-0 mr-auto ml-auto max-w-full rounded-xl p-4 "
                     text="Add Store"
-                    disabled={!storeName || !phoneVerified || !uen}
+                    disabled={!storeName || !uen}
                 />
                 <TransactionStatus>
                     <TransactionStatusLabel />
