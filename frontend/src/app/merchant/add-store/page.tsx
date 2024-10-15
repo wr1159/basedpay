@@ -32,6 +32,8 @@ export default function AddStorePage() {
 
     const registerData =
         account?.address &&
+        storeName != "" &&
+        !storeName.includes(".") &&
         createRegisterContractMethodArgs(
             storeName.endsWith(".basetest.eth")
                 ? storeName
@@ -105,7 +107,7 @@ export default function AddStorePage() {
                 <TransactionButton
                     className="mt-0 mr-auto ml-auto max-w-full rounded-xl p-4 "
                     text="Add Store"
-                    disabled={!storeName || !uen}
+                    disabled={!storeName || !uen || storeName.includes(".")}
                 />
                 <TransactionStatus>
                     <TransactionStatusLabel />
