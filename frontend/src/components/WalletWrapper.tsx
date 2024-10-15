@@ -15,6 +15,7 @@ import {
   WalletDropdownFundLink,
   WalletDropdownLink,
 } from '@coinbase/onchainkit/wallet';
+import { baseSepolia } from 'viem/chains';
 
 type WalletWrapperParams = {
   text?: string;
@@ -35,12 +36,12 @@ export default function WalletWrapper({
           className={className}
         >
           <Avatar className="h-6 w-6" />
-          <Name />
+          <Name chain={baseSepolia}/>
         </ConnectWallet>
         <WalletDropdown>
           <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick={true}>
             <Avatar />
-            <Name />
+            <Name chain={baseSepolia}/>
             <Address />
             <EthBalance />
           </Identity>
