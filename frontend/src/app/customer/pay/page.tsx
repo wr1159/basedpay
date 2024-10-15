@@ -69,7 +69,7 @@ export default function CustomerPage() {
             <div className="font-normal text-indigo-600 text-3xl not-italic tracking-[-1.2px]">
                 Paying {uen}
             </div>
-            <div className="font-normal text-gray-600 text-lg not-italic tracking-[-1.2px] mb-8">
+            <div className="font-normal text-gray-600 text-md not-italic tracking-[-1.2px] mb-8">
                 {paymentAdress as string}
             </div>
             <div className="flex justify-between items-center gap-2 mt-8">

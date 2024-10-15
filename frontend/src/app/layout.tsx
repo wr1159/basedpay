@@ -22,10 +22,11 @@ export const viewport = {
 
 export const metadata: Metadata = {
     title: "Basedpay",
-    description: "Built with OnchainKit",
+    description: "The Based way to pay",
+
     openGraph: {
         title: "Basedpay",
-        description: "Built with OnchainKit",
+        description: "The Based way to pay",
         images: [`${NEXT_PUBLIC_URL}/vibes/vibes-19.png`],
     },
 };
