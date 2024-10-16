@@ -17,11 +17,13 @@ import {
     TransactionStatusAction,
     TransactionStatusLabel,
 } from "@coinbase/onchainkit/transaction";
-import { encodeFunctionData, formatUnits, parseEther } from "viem";
+import { encodeFunctionData, formatUnits, parseEther, zeroAddress } from "viem";
 import { useToastContext } from "src/context/ToastContext";
 import { Token, TokenSelectDropdown } from "@coinbase/onchainkit/token";
 import { TOAST_TYPE } from "src/models/toast";
 import { useAccount } from "wagmi";
+import { Name } from "@coinbase/onchainkit/identity";
+import { baseSepolia } from "viem/chains";
 
 export default function CustomerPage() {
     const account = useAccount();
@@ -31,7 +33,7 @@ export default function CustomerPage() {
     const searchParams = useSearchParams();
     const uen = searchParams.get("uen");
 
-    const { data: paymentAdress } = useReadContract({
+    const { data: paymentAddress } = useReadContract({
         chainId: SELECTED_CHAIN_ID,
         abi: BasedPayAbi,
         address: BasedPayAddress,
@@ -40,18 +42,18 @@ export default function CustomerPage() {
     });
 
     const transferCall = useMemo(() => {
-        if (!token || !paymentAdress || !amount) return [];
+        if (!token || !paymentAddress || !amount) return [];
         return [
             {
                 to: token.address as `0x${string}`,
                 data: encodeFunctionData({
                     abi: XSGD_ABI,
                     functionName: "transfer",
-                    args: [paymentAdress, parseEther(amount)],
+                    args: [paymentAddress, parseEther(amount)],
                 }),
             },
         ];
-    }, [token, paymentAdress, amount]);
+    }, [token, paymentAddress, amount]);
 
     const {
         data: tokenBalance,
@@ -66,11 +68,19 @@ export default function CustomerPage() {
 
     return (
         <>
-            <div className="font-normal text-indigo-600 text-3xl not-italic tracking-[-1.2px]">
+            <div className="font-normal text-indigo-600 text-3xl not-italic tracking-[-1.2px] break-all text-wrap">
                 Paying {uen}
             </div>
             <div className="font-normal text-gray-600 text-md not-italic tracking-[-1.2px] mb-8">
-                {paymentAdress as string}
+                <Name
+                    address={
+                        paymentAddress
+                            ? (paymentAddress as `0x${string}`)
+                            : zeroAddress
+                    }
+                    className="font-normal text-gray-600 text-md not-italic tracking-[-1.2px]"
+                    chain={baseSepolia}
+                />
             </div>
             <div className="flex justify-between items-center gap-2 mt-8">
                 <input
@@ -114,7 +124,7 @@ export default function CustomerPage() {
                 <TransactionButton
                     className="mt-0 mr-auto ml-auto max-w-full rounded-xl p-4 "
                     text="Pay"
-                    disabled={!amount || !paymentAdress || !token}
+                    disabled={!amount || !paymentAddress || !token}
                 />
                 <TransactionStatus>
                     <TransactionStatusLabel />

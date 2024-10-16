@@ -78,7 +78,7 @@ export default function AddStorePage() {
                     Please ensure that your Unique Entity Number (UEN) is
                     correct
                 </p>
-                <p className="text-2xl font-bold">{uen}</p>
+                <p className="text-2xl font-bold break-all text-wrap">{uen}</p>
             </div>
 
             <Transaction
