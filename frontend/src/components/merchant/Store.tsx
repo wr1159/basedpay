@@ -12,7 +12,7 @@ export default function Store({ name, uen }: StoreProps) {
                 address: `0x1234` as const,
                 chainId: 1,
                 decimals: 18,
-                image: "https://w7.pngwing.com/pngs/109/15/png-transparent-computer-icons-badmintonclick-store-rectangle-logo-black-thumbnail.png",
+                image: "https://www.freeiconspng.com/thumbs/retail-store-icon/retail-store-icon-18.png",
                 name: name,
                 symbol: uen,
             }}
